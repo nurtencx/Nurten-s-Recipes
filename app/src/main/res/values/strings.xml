@@ -1,4 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Nurtens Recipes</string>
+    <string name="app_name">Nurten\'s Recipes</string>
+    <string name="search_hint">Search recipes or ingredients...</string>
+    <string name="category_all">All</string>
+    <string name="category_main">Main Dish</string>
+    <string name="category_soup">Soups</string>
+    <string name="category_olive_oil">Olive Oil Dishes</string>
+    <string name="category_dessert">Desserts</string>
+    <string name="nav_recipes">Recipes</string>
+    <string name="nav_pantry">What\'s in Pantry</string>
+    <string name="nav_log">Daily Tracker</string>
+    <string name="btn_add">Eat</string>
 </resources>
