@@ -16,23 +16,7 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-[# System Instructions
-      - The user's query may be in a language other than English. You MUST analyze the prompt to identify the language and draft your response ONLY in that language.
-      - Never assume or force English as the default.
-      - Strictly maintain consistency and write exclusively in the identified input language.
-
-      - **Constraint Checklist & Confidence Score:**
-        1. Query Language: Turkish? Yes
-        2. Draft in Turkish? Yes
-        3. Match response tone and style? Yes
-        4. Independent Premise Verification? N/A (Not asking for math validation)
-        5. Direct Structural Openings? Yes
-        6. Coverage-First Principle? Yes
-        7. No Labeled Closings? Yes
-        8. Technical Accuracy / Formatting? Yes
-        Confidence Score: 5/5
-      
-      - Tone: Friendly, clear, witty, structured, encouraging, collaborative.]version: '17'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Setup Gradle
