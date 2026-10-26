@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,9 +17,9 @@
         <div class="flex justify-between items-center max-w-md mx-auto">
             <div>
                 <h1 class="text-xl font-black tracking-wider flex items-center gap-1.5">
-                    <span class="text-[#F59E0B]">✿</span> NURTEN'S RECIPES
+                    <span class="text-[#F59E0B]">★</span> NURTEN'S RECIPES
                 </h1>
-                <p class="text-[10px] text-rose-100">Geleneksel Ev Tarifleri & Kalori Takibi</p>
+                <p class="text-[10px] text-rose-100">Traditional Home Recipes & Calorie Tracking</p>
             </div>
             <div id="log-counter" class="bg-black/20 text-xs px-2.5 py-1 rounded-full border border-white/20">
                 <span class="text-amber-300 font-bold" id="total-cal">0</span> kcal
@@ -30,280 +30,179 @@
     <!-- Main Container -->
     <main class="max-w-md mx-auto p-4 space-y-4">
 
-        <!-- TAB 1: RECIPES EXPLORER -->
+        <!-- TAB 1: RECIPES -->
         <section id="tab-recipes" class="space-y-4">
-            <!-- Search & Filters -->
-            <div class="bg-white p-3 rounded-xl shadow-sm space-y-2">
-                <input type="text" id="search-input" oninput="filterRecipes()" placeholder="Tarif veya malzeme ara..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48]">
-                
-                <!-- Category Pills -->
-                <div class="flex gap-2 overflow-x-auto no-scrollbar pt-1 text-xs font-semibold">
-                    <button onclick="setCategory('Tümü')" class="cat-btn bg-[#E11D48] text-white px-3 py-1 rounded-full whitespace-nowrap">Tümü (50)</button>
-                    <button onclick="setCategory('Ana Yemek')" class="cat-btn bg-slate-100 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Ana Yemek</button>
-                    <button onclick="setCategory('Çorba')" class="cat-btn bg-slate-100 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Çorbalar</button>
-                    <button onclick="setCategory('Zeytinyağlı')" class="cat-btn bg-slate-100 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Zeytinyağlı</button>
-                    <button onclick="setCategory('Tatlı')" class="cat-btn bg-slate-100 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Tatlılar</button>
-                    <button onclick="setCategory('Kahvaltılık')" class="cat-btn bg-slate-100 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Kahvaltılık</button>
-                </div>
+            <!-- Search Bar -->
+            <div class="relative">
+                <input type="text" id="search-input" placeholder="Search recipes or ingredients..." 
+                       class="w-full bg-white border border-slate-200 rounded-xl py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm transition">
+                <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
             </div>
 
-            <!-- Recipe List Grid -->
+            <!-- Category Filters -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="category-pills">
+                <button onclick="filterCategory('All')" class="cat-btn active bg-rose-600 text-white text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium shadow-sm">All (50)</button>
+                <button onclick="filterCategory('Main Course')" class="cat-btn bg-white text-slate-600 text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium border border-slate-200">Main Course</button>
+                <button onclick="filterCategory('Soups')" class="cat-btn bg-white text-slate-600 text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium border border-slate-200">Soups</button>
+                <button onclick="filterCategory('Olive Oil Dishes')" class="cat-btn bg-white text-slate-600 text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium border border-slate-200">Olive Oil Dishes</button>
+                <button onclick="filterCategory('Desserts')" class="cat-btn bg-white text-slate-600 text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium border border-slate-200">Desserts</button>
+            </div>
+
+            <!-- Recipe List -->
             <div id="recipe-list" class="space-y-3"></div>
         </section>
 
-        <!-- TAB 2: PANTRY MATCH -->
+        <!-- TAB 2: PANTRY -->
         <section id="tab-pantry" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
-                <h2 class="font-bold text-[#E11D48] text-sm uppercase tracking-wide">Dolapta Ne Var?</h2>
-                <p class="text-xs text-slate-500">Elimdeki malzemelerle ne pişirebilirim?</p>
-                
-                <div id="pantry-chips" class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto no-scrollbar border p-2 rounded-lg bg-slate-50"></div>
-                
-                <button onclick="matchPantry()" class="w-full bg-[#E11D48] text-white py-2 rounded-lg text-xs font-bold shadow hover:bg-rose-700 transition">Uygun Tarifleri Bul</button>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                <h2 class="font-bold text-slate-800 text-sm mb-1">What's in My Pantry?</h2>
+                <p class="text-xs text-slate-500 mb-3">Select the ingredients you have to see recipes you can make.</p>
+                <div id="pantry-tags" class="flex flex-wrap gap-1.5"></div>
             </div>
-
             <div id="pantry-results" class="space-y-3"></div>
         </section>
 
-        <!-- TAB 3: DAILY MEAL LOG -->
+        <!-- TAB 3: DAILY TRACKER -->
         <section id="tab-log" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <h2 class="font-bold text-slate-800 text-sm">Günlük Besin Özeti</h2>
-                    <button onclick="clearLog()" class="text-xs text-rose-500 hover:underline">Sıfırla</button>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                <div>
+                    <h2 class="font-bold text-slate-800 text-sm">Today's Total Intake</h2>
+                    <p class="text-xs text-slate-400">Logged items</p>
                 </div>
-
-                <div class="grid grid-cols-4 gap-2 text-center bg-amber-50 p-3 rounded-lg border border-amber-200">
-                    <div><span class="block text-[10px] text-slate-500">Kalori</span><strong id="log-cal" class="text-xs text-[#E11D48]">0</strong></div>
-                    <div><span class="block text-[10px] text-slate-500">Protein</span><strong id="log-prot" class="text-xs">0g</strong></div>
-                    <div><span class="block text-[10px] text-slate-500">Karb</span><strong id="log-carb" class="text-xs">0g</strong></div>
-                    <div><span class="block text-[10px] text-slate-500">Yağ</span><strong id="log-fat" class="text-xs">0g</strong></div>
-                </div>
-
-                <div id="logged-items" class="space-y-2 text-xs">
-                    <p class="text-slate-400 text-center py-4">Henüz yemek eklenmedi. Eklemek için tariflerdeki "+ Ye" butonuna dokunun.</p>
+                <div class="text-right">
+                    <span id="log-total-cal" class="text-2xl font-black text-rose-600">0</span>
+                    <span class="text-xs text-slate-500">kcal</span>
                 </div>
             </div>
+            <div id="log-list" class="space-y-2"></div>
         </section>
 
     </main>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40">
-        <div class="flex justify-around max-w-md mx-auto py-2 text-[11px] font-semibold text-slate-500">
-            <button onclick="switchTab('recipes')" id="nav-recipes" class="text-[#E11D48] flex flex-col items-center">
-                <span class="text-base">📖</span> Tarifler
+        <div class="flex justify-around max-w-md mx-auto py-2">
+            <button onclick="switchTab('recipes')" id="nav-btn-recipes" class="flex flex-col items-center gap-1 text-rose-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                <span class="text-[10px] font-medium">Recipes</span>
             </button>
-            <button onclick="switchTab('pantry')" id="nav-pantry" class="flex flex-col items-center">
-                <span class="text-base">🧺</span> Malzemem Var
+            <button onclick="switchTab('pantry')" id="nav-btn-pantry" class="flex flex-col items-center gap-1 text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                <span class="text-[10px] font-medium">Pantry</span>
             </button>
-            <button onclick="switchTab('log')" id="nav-log" class="flex flex-col items-center">
-                <span class="text-base">📊</span> Günlüğüm
+            <button onclick="switchTab('log')" id="nav-btn-log" class="flex flex-col items-center gap-1 text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <span class="text-[10px] font-medium">Daily Log</span>
             </button>
         </div>
     </nav>
 
-    <!-- Recipe Detail Modal -->
-    <div id="modal" class="fixed inset-0 bg-black/60 hidden z-50 items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-white w-full max-w-md rounded-t-2xl sm:rounded-2xl max-h-[85vh] overflow-y-auto p-5 space-y-4">
-            <div class="flex justify-between items-start">
-                <div>
-                    <span id="m-cat" class="text-[10px] bg-rose-100 text-[#E11D48] px-2 py-0.5 rounded-full font-bold uppercase"></span>
-                    <h2 id="m-title" class="text-xl font-bold text-slate-900 mt-1"></h2>
-                </div>
-                <button onclick="closeModal()" class="text-slate-400 text-xl font-bold">&times;</button>
-            </div>
-
-            <!-- Serving Scaler -->
-            <div class="bg-slate-50 p-3 rounded-lg flex justify-between items-center text-xs">
-                <span class="font-semibold text-slate-600">Porsiyon Ölçeği:</span>
-                <div class="flex items-center gap-3">
-                    <button onclick="adjustServing(-0.5)" class="w-7 h-7 bg-white border rounded font-bold text-slate-700">-</button>
-                    <span id="m-serving" class="font-bold text-sm">1.0</span>
-                    <button onclick="adjustServing(0.5)" class="w-7 h-7 bg-white border rounded font-bold text-slate-700">+</button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-4 gap-2 text-center bg-rose-50 p-3 rounded-lg border border-rose-100">
-                <div><span class="block text-[10px] text-slate-500">Kalori</span><strong id="m-cal" class="text-xs text-[#E11D48]"></strong></div>
-                <div><span class="block text-[10px] text-slate-500">Protein</span><strong id="m-prot" class="text-xs"></strong></div>
-                <div><span class="block text-[10px] text-slate-500">Karb</span><strong id="m-carb" class="text-xs"></strong></div>
-                <div><span class="block text-[10px] text-slate-500">Yağ</span><strong id="m-fat" class="text-xs"></strong></div>
-            </div>
-
-            <div>
-                <h4 class="text-xs font-bold text-slate-700 mb-1">Malzemeler:</h4>
-                <ul id="m-ing" class="list-disc list-inside text-xs text-slate-600 space-y-0.5"></ul>
-            </div>
-
-            <button id="m-add-btn" class="w-full bg-[#E11D48] text-white py-2.5 rounded-xl font-bold text-xs shadow hover:bg-rose-700">
-                + Günlüğüme Ekle
-            </button>
-        </div>
-    </div>
-
+    <!-- JavaScript Data & Business Logic -->
     <script>
-        let recipesData = [];
-        let currentCategory = 'Tümü';
-        let selectedRecipe = null;
-        let currentServing = 1.0;
+        const recipes = [
+            { id: 1, name: "Lentil Soup", category: "Soups", cal: 180, ingredients: ["Red Lentil", "Onion", "Carrot", "Butter", "Salt", "Mint"] },
+            { id: 2, name: "Stuffed Eggplant (Karniyarik)", category: "Main Course", cal: 380, ingredients: ["Eggplant", "Minced Meat", "Onion", "Tomato", "Pepper", "Garlic"] },
+            { id: 3, name: "Olive Oil Stuffed Grape Leaves", category: "Olive Oil Dishes", cal: 290, ingredients: ["Grape Leaves", "Rice", "Onion", "Olive Oil", "Pine Nuts", "Currants"] },
+            { id: 4, name: "Rice Pudding (Sutlac)", category: "Desserts", cal: 260, ingredients: ["Milk", "Rice", "Sugar", "Starch", "Vanilla"] },
+            { id: 5, name: "Chicken Saute", category: "Main Course", cal: 320, ingredients: ["Chicken Breast", "Pepper", "Tomato", "Onion", "Olive Oil", "Thyme"] },
+            { id: 6, name: "Ezogelin Soup", category: "Soups", cal: 210, ingredients: ["Red Lentil", "Bulgur", "Rice", "Tomato Paste", "Mint"] },
+            { id: 7, name: "Mushroom Saute", category: "Olive Oil Dishes", cal: 150, ingredients: ["Mushroom", "Capia Pepper", "Onion", "Butter", "Black Pepper"] }
+        ];
+
+        let selectedCategory = 'All';
+        let searchQuery = '';
+        let selectedPantry = [];
         let dailyLog = [];
 
-        function loadData() {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'recipes.json', true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
-                    try {
-                        recipesData = JSON.parse(xhr.responseText);
-                        renderList(recipesData);
-                        setupPantryChips();
-                    } catch (e) {
-                        console.error("JSON Parse Error", e);
-                    }
-                }
-            };
-            xhr.send();
-        }
+        function renderRecipes() {
+            const list = document.getElementById('recipe-list');
+            list.innerHTML = '';
 
-        function renderList(list) {
-            const container = document.getElementById('recipe-list');
-            container.innerHTML = list.map(r => `
-                <div class="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm flex justify-between items-center gap-2">
-                    <div class="flex-1 cursor-pointer" onclick="openModal(${r.id})">
-                        <span class="text-[9px] bg-rose-50 text-[#E11D48] px-2 py-0.5 rounded-full font-bold uppercase">${r.category}</span>
-                        <h3 class="text-sm font-bold text-slate-900 mt-0.5">${r.name}</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">${r.ingredients.join(', ')}</p>
-                    </div>
-                    <div class="text-right flex flex-col items-end gap-1">
-                        <span class="text-xs font-bold text-[#F59E0B] bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${r.calories} kcal</span>
-                        <button onclick="addToLog(${r.id}, 1)" class="text-[10px] bg-[#E11D48] text-white px-2.5 py-1 rounded font-semibold">+ Ye</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function filterRecipes() {
-            const q = document.getElementById('search-input').value.toLowerCase();
-            const filtered = recipesData.filter(r => 
-                (currentCategory === 'Tümü' || r.category === currentCategory) &&
-                (r.name.toLowerCase().includes(q) || r.ingredients.some(i => i.toLowerCase().includes(q)))
-            );
-            renderList(filtered);
-        }
-
-        function setCategory(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(b => {
-                b.classList.remove('bg-[#E11D48]', 'text-white');
-                b.classList.add('bg-slate-100', 'text-slate-600');
+            const filtered = recipes.filter(r => {
+                const matchesCat = selectedCategory === 'All' || r.category === selectedCategory;
+                const matchesSearch = r.name.toLowerCase().includes(searchQuery) || 
+                                      r.ingredients.some(i => i.toLowerCase().includes(searchQuery));
+                return matchesCat && matchesSearch;
             });
-            event.target.classList.remove('bg-slate-100', 'text-slate-600');
-            event.target.classList.add('bg-[#E11D48]', 'text-white');
-            filterRecipes();
+
+            filtered.forEach(r => {
+                list.innerHTML += `
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                        <div>
+                            <span class="text-[9px] font-bold text-rose-500 uppercase tracking-wider">${r.category}</span>
+                            <h3 class="font-bold text-slate-800 text-sm">${r.name}</h3>
+                            <p class="text-[11px] text-slate-400 mt-0.5">${r.ingredients.join(', ')}</p>
+                        </div>
+                        <div class="text-right flex flex-col items-end gap-1.5">
+                            <span class="text-xs font-bold text-amber-500">${r.cal} kcal</span>
+                            <button onclick="addLog(${r.id})" class="bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white text-xs font-semibold px-2.5 py-1 rounded-lg transition">+ Eat</button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        function setupPantryChips() {
-            const allIngs = [...new Set(recipesData.flatMap(r => r.ingredients))].sort();
-            const container = document.getElementById('pantry-chips');
-            container.innerHTML = allIngs.map(i => `
-                <label class="inline-flex items-center bg-white px-2 py-1 rounded border text-[11px] cursor-pointer">
-                    <input type="checkbox" value="${i}" class="pantry-check mr-1 text-[#E11D48]"> ${i}
-                </label>
-            `).join('');
+        function filterCategory(cat) {
+            selectedCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.innerText.includes(cat)) {
+                    btn.className = "cat-btn active bg-rose-600 text-white text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium shadow-sm";
+                } else {
+                    btn.className = "cat-btn bg-white text-slate-600 text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium border border-slate-200";
+                }
+            });
+            renderRecipes();
         }
 
-        function matchPantry() {
-            const checked = Array.from(document.querySelectorAll('.pantry-check:checked')).map(c => c.value);
-            if (!checked.length) return alert('Lütfen en az 1 malzeme seçin.');
-            
-            const matches = recipesData.filter(r => checked.some(i => r.ingredients.includes(i)));
-            const container = document.getElementById('pantry-results');
-            
-            container.innerHTML = matches.map(r => `
-                <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm text-xs">
-                    <h4 class="font-bold text-slate-900">${r.name} (${r.calories} kcal)</h4>
-                    <p class="text-emerald-600 font-medium mt-1">Eşleşen Malzemeler: ${r.ingredients.filter(i => checked.includes(i)).join(', ')}</p>
-                </div>
-            `).join('');
-        }
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            renderRecipes();
+        });
 
-        function openModal(id) {
-            selectedRecipe = recipesData.find(r => r.id === id);
-            currentServing = 1.0;
-            updateModalValues();
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modal').classList.add('flex');
-        }
-
-        function adjustServing(delta) {
-            if (currentServing + delta >= 0.5) {
-                currentServing += delta;
-                updateModalValues();
-            }
-        }
-
-        function updateModalValues() {
-            document.getElementById('m-title').innerText = selectedRecipe.name;
-            document.getElementById('m-cat').innerText = selectedRecipe.category;
-            document.getElementById('m-serving').innerText = currentServing.toFixed(1);
-            document.getElementById('m-cal').innerText = Math.round(selectedRecipe.calories * currentServing) + ' kcal';
-            document.getElementById('m-prot').innerText = Math.round(selectedRecipe.protein * currentServing) + 'g';
-            document.getElementById('m-carb').innerText = Math.round(selectedRecipe.carbs * currentServing) + 'g';
-            document.getElementById('m-fat').innerText = Math.round(selectedRecipe.fat * currentServing) + 'g';
-            document.getElementById('m-ing').innerHTML = selectedRecipe.ingredients.map(i => `<li>${i}</li>`).join('');
-            document.getElementById('m-add-btn').onclick = () => { addToLog(selectedRecipe.id, currentServing); closeModal(); };
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
-            document.getElementById('modal').classList.remove('flex');
-        }
-
-        function addToLog(id, serving) {
-            const r = recipesData.find(item => item.id === id);
-            dailyLog.push({ ...r, loggedServing: serving });
+        function addLog(id) {
+            const recipe = recipes.find(r => r.id === id);
+            dailyLog.push(recipe);
             updateLogUI();
         }
 
         function updateLogUI() {
-            const totalCal = dailyLog.reduce((s, i) => s + (i.calories * i.loggedServing), 0);
-            const totalProt = dailyLog.reduce((s, i) => s + (i.protein * i.loggedServing), 0);
-            const totalCarb = dailyLog.reduce((s, i) => s + (i.carbs * i.loggedServing), 0);
-            const totalFat = dailyLog.reduce((s, i) => s + (i.fat * i.loggedServing), 0);
+            const total = dailyLog.reduce((sum, item) => sum + item.cal, 0);
+            document.getElementById('total-cal').innerText = total;
+            document.getElementById('log-total-cal').innerText = total;
 
-            document.getElementById('total-cal').innerText = Math.round(totalCal);
-            document.getElementById('log-cal').innerText = Math.round(totalCal);
-            document.getElementById('log-prot').innerText = Math.round(totalProt) + 'g';
-            document.getElementById('log-carb').innerText = Math.round(totalCarb) + 'g';
-            document.getElementById('log-fat').innerText = Math.round(totalFat) + 'g';
-
-            const container = document.getElementById('logged-items');
-            container.innerHTML = dailyLog.map((item) => `
-                <div class="flex justify-between items-center bg-slate-50 p-2 rounded border">
-                    <div>
-                        <strong>${item.name}</strong> <span class="text-slate-400">(${item.loggedServing}x porsiyon)</span>
+            const logList = document.getElementById('log-list');
+            logList.innerHTML = '';
+            dailyLog.forEach((item, index) => {
+                logList.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center text-xs">
+                        <span class="font-medium text-slate-700">${item.name}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-amber-500">${item.cal} kcal</span>
+                            <button onclick="removeLog(${index})" class="text-slate-300 hover:text-rose-500 font-bold px-1">✕</button>
+                        </div>
                     </div>
-                    <span class="font-bold text-[#E11D48]">${Math.round(item.calories * item.loggedServing)} kcal</span>
-                </div>
-            `).join('');
+                `;
+            });
         }
 
-        function clearLog() {
-            dailyLog = [];
+        function removeLog(index) {
+            dailyLog.splice(index, 1);
             updateLogUI();
         }
 
         function switchTab(tab) {
-            document.getElementById('tab-recipes').classList.toggle('hidden', tab !== 'recipes');
-            document.getElementById('tab-pantry').classList.toggle('hidden', tab !== 'pantry');
-            document.getElementById('tab-log').classList.toggle('hidden', tab !== 'log');
-            
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('text-[#E11D48]'));
-            document.getElementById('nav-' + tab).classList.add('text-[#E11D48]');
+            ['recipes', 'pantry', 'log'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-btn-${t}`).className = "flex flex-col items-center gap-1 text-slate-400";
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`nav-btn-${tab}`).className = "flex flex-col items-center gap-1 text-rose-600";
         }
 
-        window.onload = loadData;
+        // Init
+        renderRecipes();
     </script>
 </body>
 </html>
